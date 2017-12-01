@@ -18,5 +18,7 @@ func ValueOf(i interface{}) Value
 
 除通过实际对象获取类型外，可以通过反射直接构造一些基础复合类型
 ```
-print
+s := reflect.ArrayOf(10, reflect.TypeOf("st"))
+fmt.Print(s)
+>>> [10]string
 ```
