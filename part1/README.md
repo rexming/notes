@@ -17,6 +17,7 @@ func ValueOf(i interface{}) Value
 	Struct|UnsafePointer
 
 除通过实际对象获取类型外，可以通过反射直接构造一些基础复合类型
+(目前感觉没什么用。。。)
 ```
 s := reflect.ArrayOf(10, reflect.TypeOf("st"))
 fmt.Println(s)
