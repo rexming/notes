@@ -12,3 +12,15 @@ Log|输出错误信息，仅失败或-v时输出|Logf
 Parallel|与有同样设置的测试函数并行执行
 Error|Fail+Log|Errorf
 Fatal|FailNow+Log|Fatalf
+
+
+## t.Parallel() 是同时运行多个测试函数
+示例： A和B并行运行测试
+```
+func TestA(t *testing.T)  {
+	t.Parallel()
+}
+func TestB(t *testing.T)  {
+	t.Parallel()
+}
+```
