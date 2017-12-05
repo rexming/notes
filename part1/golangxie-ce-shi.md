@@ -8,3 +8,7 @@
 Fail|失败：继续执行当前测试函数
 FailNow|失败：立即终止执行当前测试函数|Failed
 SkipNoe|跳过：停止执行当前测试函数|Skip,Skipf,Skipped
+Log|输出错误信息，仅失败或-v时输出|Logf
+Parallel|与有同样设置的测试函数并行执行
+Error|Fail+Log|Errorf
+Fatal|FailNow+Log|Fatalf
