@@ -37,4 +37,42 @@ func doStuff() error {
 ```
 
 # 正确示例
-# 你好
+```
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func main() {
+	err := doStuff()
+	fmt.Println(err)
+}
+
+func pressButton() {
+	fmt.Println("I'm Mr. Meeseeks, look at me!!")
+	// other stuff then happens, but if Jerry asks to
+	// remove 2 strokes from his golf game...
+	panic("It's gettin' weird!")
+}
+
+func doStuff() (err error) {
+	// If there is a panic we need to recover in a deferred func
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("the meeseeks went crazy!")
+		}
+	}()
+
+	pressButton()
+	return err
+}
+
+打印输出
+>>I'm Mr. Meeseeks, look at me!!
+>>the meeseeks went crazy!	
+```
+
+# 原因
+panic 会立即中断当前函数流程，
