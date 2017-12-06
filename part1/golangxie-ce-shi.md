@@ -37,9 +37,12 @@ func TestB(t *testing.T)  {
 -count|重复测试次数|默认为1
 
 # table driven模式
-
+todo
 # test main 模式
+todo
 ```
 	func TestMain(m *testing.M){
 	}
 ```
+
+#
