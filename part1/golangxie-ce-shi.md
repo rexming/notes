@@ -45,4 +45,18 @@ todo
 	}
 ```
 
-#
+# example 
+例代码是为了导入帮助文档，通过对比输出结果stdout和内部output 注释是否一致来判断是否成功.(所以不能使用内置print/println)
+
+
+```
+func ExampleAdd() {
+	fmt.Println(add(1,2))
+	fmt.Println(add(2,2))
+	//Output
+	//3
+	//4
+
+}
+```
+如果没有output注释，该示例函数不会被执行
