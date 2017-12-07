@@ -1,4 +1,4 @@
-1 . A deferred function's arguments are evaluated when the defer statement is evaluated.
+****1 . A deferred function's arguments are evaluated when the defer statement is evaluated.
 
 In this example, the expression "i" is evaluated when the Println call is deferred. The deferred call will print "0" after the function returns.
 ```

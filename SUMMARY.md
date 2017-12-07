@@ -18,6 +18,8 @@
   * [Golang写测试](part1/golangxie-ce-shi.md)
   * [将panic转换为err返回](part1/jiang-panic-zhuan-huan-wei-err-fan-hui.md)
   * [defer三个特性](part1/defersan-ge-te-xing.md)
+  * [GC垃圾回收](part1/gcla-ji-hui-shou.md)
+  * [如何优化GC](part1/ru-he-you-hua-gc.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
