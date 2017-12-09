@@ -40,5 +40,5 @@ Goroutines优于线程的优势
 3.Goroutines使用渠道进行沟通。使用Goroutine访问共享内存时，通道设计可以防止竞争状况的发生。渠道可以被认为是Goroutines沟通的管道
 
 # 4
-知乎链接
+知乎链接：协程图示P M G 概念
 https://www.zhihu.com/question/20862617
