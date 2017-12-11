@@ -11,6 +11,7 @@
   * [\[DSL,GPL\]](dslgpl.md)
   * [RPC](rpc.md)
   * [句柄](句柄.md)
+  * [CGI和FASTCGI](cgihe-fastcgi.md)
 * [python](part2/README.md)
   * [We love feedback](part2/README.md#feedback)
   * [Better tools for authors](part2/README.md#tools)
