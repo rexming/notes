@@ -15,7 +15,7 @@
 * [python](part2/README.md)
   * [We love feedback](part2/README.md#feedback)
   * [Better tools for authors](part2/README.md#tools)
-* [golang](part1/README.md)
+* [golang](go/README.md)
   * [反射](part1/README.md#writing)
   * [Golang写测试](part1/golangxie-ce-shi.md)
   * [将panic转换为err返回](part1/jiang-panic-zhuan-huan-wei-err-fan-hui.md)
