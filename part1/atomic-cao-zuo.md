@@ -25,6 +25,7 @@
 *  The load and store operations, implemented by the LoadT and StoreT functions, are the atomic equivalents of "return *addr" and "*addr = val".
 
 # atomic.swappoint()
+// SwapPointer atomically stores new into *addr and returns the previous *addr value.
 ```
 var arr = make([]int, 0)
 
