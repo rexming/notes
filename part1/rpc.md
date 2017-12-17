@@ -22,3 +22,77 @@
 除非显示的设置 codec ,否则这个库默认使用包 encoding/gob 作为序列化框架。
 
 # 示例
+```
+server
+
+import "errors"
+
+//Args 接受参数
+type Args struct {
+	A, B int
+}
+
+//Quotient 返回结果
+type Quotient struct {
+	Quo, Rem int
+}
+
+type Arith int
+
+//Multiply 接受参数相乘
+func (t *Arith) Multiply(args *Args, reply *int) error {
+	*reply = args.A * args.B
+	return nil
+}
+
+//Divide 接收参数相除
+func (t *Arith) Divide(args *Args, quo *Quotient) error {
+	if args.B == 0 {
+		return errors.New("divide by zero")
+	}
+	quo.Quo = args.A / args.B
+	quo.Rem = args.A % args.B
+	return nil
+}
+
+--------------------------------
+serer main.go
+
+func main() {
+	arith := new(server.Arith)
+	rpc.Register(arith)
+	rpc.HandleHTTP()
+	
+	l, e := net.Listen("tcp", ":12345")
+	if e != nil {
+		log.Fatal("listen error:", e)
+	}
+	
+	go http.Serve(l, nil)
+	
+	<-(chan struct{})(nil)
+	
+}
+
+client main.go
+func main() {
+	
+	client, err := rpc.DialHTTP("tcp", "127.0.0.1:12345")
+	if err != nil {
+		log.Fatal("dialing:", err)
+	}
+	
+	args := &server.Args{7, 8}
+	var reply int
+	err = client.Call("Arith.Multiply", args, &reply)
+	if err != nil {
+		log.Fatal("arith error:", err)
+	}
+	fmt.Printf("Arith: %d*%d=%d", args.A, args.B, reply)
+	
+	quotient := new(server.Quotient)
+	divCall := client.Go("Arith.Divide", args, quotient, nil)
+	replyCall := <-divCall.Done
+	fmt.Println(replyCall.Reply)
+}
+```
