@@ -95,4 +95,7 @@ func main() {
 	replyCall := <-divCall.Done
 	fmt.Println(replyCall.Reply)
 }
+
+输出：Arith: 7*8=56
+     &{0 7}
 ```
