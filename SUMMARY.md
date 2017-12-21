@@ -26,6 +26,7 @@
   * [数组与切片](go/shu-zu-yu-qie-pian.md)
   * [atomic 操作](part1/atomic-cao-zuo.md)
   * [RPC](part1/rpc.md)
+  * [gob](part1/gob.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
