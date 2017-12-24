@@ -55,3 +55,7 @@ type hmap struct {
 }
 ```
 
+<font size="9" face="arial" color="red">不能随便相信别人的结论，需要自己动脑去思考，去实践</font>
+http://blog.csdn.net/future_challenger/article/details/48438017 
+比如这篇文章，里面有些错误信息(经过仔细思考后有些认为是错误的)
+
