@@ -40,4 +40,25 @@ func (a ByAge) Less(i, j int) bool {
 		return a[i].Age < a[j].Age
 	}
 }
+稍微转换一下，就正确了：
+func (a ByAge) Less(i, j int) bool {
+	//fmt.Println("343")
+	if a[i].Age == a[j].Age && a[i].Name == "John" && a[j].Name == "Bob" {
+		return true
+		
+	} else {
+		return a[i].Age < a[j].Age
+	}
+}
+```
+# 原因是：
+通过源码发现：原来是倒着的希尔排序，╮(╯▽╰)╭
+```
+func insertionSort(data Interface, a, b int) {
+	for i := a + 1; i < b; i++ {
+		for j := i; j > a && data.Less(j, j-1); j-- {
+			data.Swap(j, j-1)
+		}
+	}
+}
 ```
