@@ -31,6 +31,7 @@
   * [传值与传引用](part1/chuan-zhi-he-chuan-yin-yong.md)
   * [channel=nil与channel&lt;-nil](part1/channelyu-select.md)
   * [排序sort](part1/排序sort.md)
+  * [pprof分析](go/pproffen-xi.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
