@@ -44,3 +44,30 @@ func stopMemProfile() {
 }
 ```
 # 程序阻塞
+程序阻塞概要文件用于保存用户程序中的Goroutine阻塞事件的记录。我们来看开启这项操作的方法
+```
+func startBlockProfile() {
+    if *blockProfile != "" && *blockProfileRate > 0 {
+        runtime.SetBlockProfileRate(*blockProfileRate)
+    }
+}
+```
+与开启内存使用情况记录的方式类似，在函数startBlockProfile中，当*blockProfile和*blockProfileRate的值有效时，我们会设置对Goroutine阻塞事件的取样间隔。*blockProfile的含义为程序阻塞概要文件的绝对路径。*blockProfileRate的含义是分析器的取样间隔，单位是次。函数runtime.SetBlockProfileRate的唯一参数是int类型的。它的含义是分析器会在每发生几次Goroutine阻塞事件时对这些事件进行取样。如果我们不显式的使用runtime.SetBlockProfileRate函数设置取样间隔，那么取样间隔就为1。也就是说，在默认情况下，每发生一次Goroutine阻塞事件，分析器就会取样一次。与内存使用情况记录一样，运行时系统对Goroutine阻塞事件的取样操作也会贯穿于用户程序的整个运行期。但是，如果我们通过runtime.SetBlockProfileRate函数将这个取样间隔设置为0或者负数，那么这个取样操作就会被取消。
+
+我们在程序结束之前可以将被保存在运行时内存中的Goroutine阻塞事件记录存放到指定的文件中。代码如下：
+```
+func stopBlockProfile() {
+    if *blockProfile != "" && *blockProfileRate >= 0 {
+        f, err := os.Create(*blockProfile)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "Can not create block profile output file: %s", err)
+            return
+        }
+        if err = pprof.Lookup("block").WriteTo(f, 0); err != nil {
+            fmt.Fprintf(os.Stderr, "Can not write %s: %s", *blockProfile, err)
+        }
+        f.Close()
+    }
+}
+```
+在创建程序阻塞概要文件之后，stopBlockProfile函数会先通过函数pprof.Lookup将保存在运行时内存中的内存使用情况记录取出，并在记录的实例上调用WriteTo方法将记录写入到文件中
