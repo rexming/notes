@@ -95,5 +95,147 @@ demo1.go:5:8: main a does not escape
 
 一段会使内存不断增长的代码
 ```
+type Node struct {
+	next *Node
+	payload [64]byte
+}
+
+func main() {
+	curr := new(Node)
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+	}
+}
+```
+原因是第一个Node的new分配在栈上了，go编译器会对代码做逃逸分析，如果在函数中new分配一个小对象，而且这个小对象不会逃逸出去，则可以直接将其分配到栈上，所以上面代码在优化后相当于：
+```
+func main() {
+	var n Node
+	curr := &n
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+	}
+}
+```
+
+
+而当函数返回后调用GC不能及时时被回收
+```
+func f() {
+	curr := new(Node)
+	for i := 0; i < 10000000; i ++ {
+		curr.next = new(Node)
+		curr = curr.next
+	}
+}
+
+func main() {
+	f()
+	runtime.GC()
+	time.Sleep(time.Second * 100) //在这里查看进程内存使用
+}
+```
+也就是说，函数返回后，栈上的数据还是会作为不可达来处理的，所以正常业务开发的时候，这个问题看起来也不算严重（从main到main_loop这一段的临时对象容易出事，注意一下即可）
+
+解决办法是用二级指针
+```
+//用二级指针，new(*Node)会被逃逸优化，但new(Node)就不会了
+func main() {
+	curr := new(*Node)
+	*curr = new(Node)
+	for {
+		(*curr).next = new(Node)
+		*curr = (*curr).next
+	}
+}
+
+//用return强制逃逸，避免优化
+func f() *Node {
+	curr := new(Node)
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+	}
+	return curr
+}
+
+func main() {
+	f()
+}
+```
+# 自己实践例2
+用go trace 工具捕捉trace文件进行分析
+```
+func main() {
+	f, _ := os.Create("trace.out")
+	defer f.Close()
+	trace.Start(f)
+	defer trace.Stop()
+	curr := new(Node)
+	n := 0
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+		n++
+		if n == 10000000 {
+			break
+		}
+		if n%1000 == 0 {
+			runtime.GC()
+		}
+	}
+	
+}
+```
+当n是1000的倍数时，显示调用GC，效果没什么用
 
 ```
+func main() {
+	f, _ := os.Create("trace.out")
+	defer f.Close()
+	trace.Start(f)
+	defer trace.Stop()
+	curr := new(Node)
+	n := 0
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+		n++
+		if n == 10000000 {
+			break
+		}
+		time.Sleep(time.Nanosecond)
+	}
+	
+}
+```
+当让休眠1纳秒却可以看出GC效果
+
+```
+func main() {
+	f, _ := os.Create("trace.out")
+	defer f.Close()
+	trace.Start(f)
+	defer trace.Stop()
+	curr := new(Node)
+	n := 0
+	for {
+		curr.next = new(Node)
+		curr = curr.next
+		n++
+		if n == 10000000 {
+			break
+		}
+		if n == 10000 || n == 1000000 || n == 2000000 {
+			runtime.GC()
+			//time.Sleep(time.Millisecond)
+		}
+	}
+	
+}
+```
+当两次GC调用之间存在较大内存扩增时，也可以观察出明显的GC效果
+
+看来还是对内存管理和GC机制不熟
