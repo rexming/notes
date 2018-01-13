@@ -40,6 +40,7 @@
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
   * [\[树\]](suan-fa-he-shu-ju-jie-67845d/68115d.md)
+  * [线性表](suan-fa-he-shu-ju-jie-67845d/xian-xing-biao.md)
 * [数据库](shu-ju-ku.md)
   * [sqlite](shu-ju-ku/sqlite.md)
 * [实践](shi-jian.md)
