@@ -37,6 +37,7 @@
   * [Golang GC](go/golang-gc.md)
   * [golang map](go/golang-map.md)
   * [flag](go/flag.md)
+  * [golang 内存管理](go/golang-nei-cun-guan-li.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
