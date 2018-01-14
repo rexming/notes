@@ -14,3 +14,4 @@ page: 2.1
 [-age=2.1]
 
 ```
+一篇flag配置全局参数的文章：http://tonybai.com/2018/01/13/the-problems-i-encountered-when-writing-go-code-issue-1st/?f=tt&hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
