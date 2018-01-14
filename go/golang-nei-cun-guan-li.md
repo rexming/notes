@@ -6,3 +6,6 @@
 生命周期更长的变量，或者很大的变量被分配在堆上
 3.数据段（Data segment）
 存储全局变量，在编译期被定义，一直到程序结束
+
+未完待续
+来源：https://vikash1976.wordpress.com/2017/03/26/go-lang-memory-management-and-garbage-collection/
