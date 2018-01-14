@@ -36,6 +36,7 @@
   * [golang 的变量到底分配在栈上还是堆上？](go/golang-de-bian-liang-dao-di-fen-pei-zai-zhan-shang-huan-shi-dui-shang-ff1f.md)
   * [Golang GC](go/golang-gc.md)
   * [golang map](go/golang-map.md)
+  * [flag](go/flag.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
