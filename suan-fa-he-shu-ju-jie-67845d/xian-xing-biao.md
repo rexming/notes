@@ -15,3 +15,19 @@ loc(ai) = loc(a1) + (i-1)*c
 我们从第i个位置开始连续插入10个元素
 * 顺序表每一次都是O(n)
 * 链式表第一次为O(n),其他9次为O(1)
+
+### 静态链表
+用数组进行描述的链表叫做静态链表
+C语言描述
+```
+#define MAXSIZE 1000
+
+typedef struct {
+    ElemType  data ;
+    int cur;
+}component,SLinkList[MAXSIZE]; //component 代表这种结构体类型
+//SLinkList[MAXSIZE] 代表这种结构体类型的数组
+```
+ typedef 的功能，它用来建立新的数据类型名，例如，
+声明：typedef int Length;
+将 Length 定义为与 int 具有同等意义的名字。类型 Length 可用于类型声明、类型转换等，它和类型 int 完全相同，相当于GO 语言的别名
