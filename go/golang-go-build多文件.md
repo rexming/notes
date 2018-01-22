@@ -24,4 +24,6 @@ go install 如果是main源文件可以在gobin下生成一个可执行的exe文
 			方便以后如果在引用这个包，不需要从新编译
 
 官方建议最好将GOBIN目录也加到PATH路径下，以方便gobin下exe文件可以随时运行
+windows下添加方法：PATH = %PATH%;%GOPATH%\bin
+linux下添加方法：$ **export PATH=\$PATH:\$(go env GOPATH)/bin**
 
