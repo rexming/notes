@@ -54,4 +54,6 @@
   * [windows](cao-zuo-xi-tong/windows.md)
     * [bat批处理](cao-zuo-xi-tong/windows/batpi-chu-li.md)
   * linux
+* [工具和软件](gong-ju-he-ruan-jian.md)
+  * [火焰图](gong-ju-he-ruan-jian/火焰图.md)
 
