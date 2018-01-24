@@ -53,6 +53,7 @@
 * [操作系统](cao-zuo-xi-tong.md)
   * [windows](cao-zuo-xi-tong/windows.md)
     * [bat批处理](cao-zuo-xi-tong/windows/batpi-chu-li.md)
+    * [DOS命令返回](cao-zuo-xi-tong/windows/dos命令返回值.md)
   * linux
 * [工具和软件](gong-ju-he-ruan-jian.md)
   * [火焰图](gong-ju-he-ruan-jian/火焰图.md)
