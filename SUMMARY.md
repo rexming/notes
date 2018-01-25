@@ -50,7 +50,7 @@
 * [实践](shi-jian.md)
   * [channel  等待结果](chan-deng-dai-jie-guo.md)
   * 多协程中易出现的错误
-  * [golang app self update on window]()
+  * [golang app self update on window](goaction/golang app self update on window.md)
 * [操作系统](cao-zuo-xi-tong.md)
   * [windows](cao-zuo-xi-tong/windows.md)
     * [bat批处理](cao-zuo-xi-tong/windows/batpi-chu-li.md)
