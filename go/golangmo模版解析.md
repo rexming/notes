@@ -95,18 +95,18 @@ func main() {
 }
 
 output:
-Backslash! An in depth look at the &#34;\&#34; character.
+1.Backslash! An in depth look at the &#34;\&#34; character.
 &lt;h1&gt;A header!&lt;/h1&gt;
 <h1>A Safe header</h1>
 {&lt;h1&gt;A header!&lt;/h1&gt; &lt;h1&gt;A Safe header&lt;/h1&gt; Backslash! An in depth look at the &#34;\&#34; character. /dashboard/settings {Fido 6} map[key:value other_key:other_value]}
 
-<a title="Backslash! An in depth look at the &#34;\&#34; character.">
-<a title="&lt;h1&gt;A header!&lt;/h1&gt;">
+6 <a title="Backslash! An in depth look at the &#34;\&#34; character.">
+7 <a title="&lt;h1&gt;A header!&lt;/h1&gt;">
 
-<a href="%3ch1%3eA%20header!%3c/h1%3e">
-<a href="?q=%3ch1%3eA%20header%21%3c%2fh1%3e">
-<a href="/dashboard/settings">
-<a href="?q=%2fdashboard%2fsettings">
+9 <a href="%3ch1%3eA%20header!%3c/h1%3e">
+10 <a href="?q=%3ch1%3eA%20header%21%3c%2fh1%3e">
+11 <a href="/dashboard/settings">
+12 <a href="?q=%2fdashboard%2fsettings">
 
 <script>
   var dog = {"Name":"Fido","Age":6};
@@ -116,4 +116,8 @@ Backslash! An in depth look at the &#34;\&#34; character.
     
 ```
 分析输出的前几行，解析到模版的任何字符都需要先进行编码包括<与>,然后正确渲染，注意到template.HTML类型的之没有被编码，这种类型代码跳过编码（所以尽量避免这种情况，防止注入）
+
+注意第6,7行与9，10的编码会有一点不同，其原因是在href 中，当正斜杠时作为路径不会被编码，当作为查询参数不会编码。
+
+golang 模版有两个常用的传入参数的类型。一个是struct，还有一个是map[string]interface{},这两个类型会等价为json object
 
