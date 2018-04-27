@@ -41,7 +41,7 @@
   * [golang标准库库之fmt ](go/golang标准库之fmt.md)
   * [golang go build 多文件](go/golang-go-build多文件.md)
   * [golang实用技巧](go/golangshi-yong-ji-qiao.md)
-  * [golang模版解析](go/golang模版解析.md)
+  * [golang模版解析](go/golangmo模版解析.md)
 * [C](part1/c.md)
   * [结构体内存分配](201711292051.md)
 * [算法和数据结构](suan-fa-he-shu-ju-jie-67845d.md)
