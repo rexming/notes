@@ -125,6 +125,205 @@ golang 模版有两个常用的传入参数的类型。一个是struct，还有�
 同理适用于map类型：
 例：
 
+```
+var data2 = map[string]interface{}{"s": struct {
+		Name string
+		age int
+	}{"zhang",24}}
+	err = t.Execute(os.Stdout, data2)
+
+{{.s}} //output： {zhang 24} 带了一个中括号
+{{.s.Name}} //output：zhang
+{{.s.age}} //output:panic  age is an unexported field of struct type interface {}
+```
+
+模版语法:
+## if/else block
+里面可以是bool类型或字符串，空字符串为false
+
+```
+demo.html
+<h1>Hello, {{if .Name}} {{.Name}} {{else}} there {{end}}!</h1>
+
+去除空格：
+1.手动删除模版空格
+2.适用-来消除多余空格
+<h1>
+  Hello,
+  {{if .Name}}
+    {{.Name}}
+  {{- else}}
+    there
+  {{- end}}!
+</h1>
+````
+## Range blocks
+
+用来遍历数组类型
+
+```
+main.go
+package main
+
+import (
+	"html/template"
+	"net/http"
+)
+
+var testTemplate *template.Template
+
+type Widget struct {
+	Name  string
+	Price int
+}
+
+type ViewData struct {
+	Name    string
+	Widgets []Widget
+}
+
+func main() {
+	var err error
+	testTemplate, err = template.ParseFiles("src/demo.html")
+	if err != nil {
+		panic(err)
+	}
+	
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":3000", nil)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	
+	err := testTemplate.Execute(w, ViewData{
+		Name: "John Smith",
+		Widgets: []Widget{
+			Widget{"Blue Widget", 12},
+			Widget{"Red Widget", 12},
+			Widget{"Green Widget", 12},
+		},
+	})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+demo1.html
+{{range .Widgets}}
+  <div class="widget">
+    <h3 class="name">{{.Name}}</h3>
+    <span class="price">${{.Price}}</span>
+  </div>
+{{end}}
+
+output:
+Blue Widget
+$12
+Red Widget
+$12
+Green Widget
+$12
+
+-----------------------------
+demo2.html
+{{range .Widgets}}
+  <div class="widget">
+    <h3 class="name">{{.}}</h3>
+    <span class="price">${{.}}</span>
+  </div>
+{{end}}
+
+output:
+{Blue Widget 12}
+${Blue Widget 12}
+{Red Widget 12}
+${Red Widget 12}
+{Green Widget 12}
+${Green Widget 12}
+```
+特别的是当插入<pre>{{.}}</pre>。dot 还是代表go中的变量
+
+```
+{{range .Widgets}}
+<div class="widget">
+    <pre>{{.}}</pre>
+    <h3 class="name">{{.Name}}</h3>
+    <span class="price">${{.Price}}</span>
+</div>
+{{end}}
+output:
+{Blue Widget 12}
+Blue Widget
+$12
+{Red Widget 12}
+Red Widget
+$12
+{Green Widget 12}
+Green Widget
+$12
+```
+## 模版嵌套
+定义和使用一个模版
+
+```
+定义
+footer.html
+{{define "footer"}}
+...
+{{end}}
+
+使用
+在index.html添加即可引用
+{{template "footer"}}
+
+
+```
+footer称为子模版，index.html 称为父模版，子模版中可 获得父模版中变量。
+{{template "footer" .}}/{{template "footer" .Attr}}
+便获取了父模版的变量
+代码实例
+
+```
+{{define "widget-header"}}
+  <h3 class="name">{{.}}</h3>
+{{end}}
+
+{{range .Widgets}}
+  <div class="widget">
+    {{template "widget-header" .Name}}
+    <span class="price">${{.Price}}</span>
+  </div>
+{{end}}
+```
+.Name 属性传给了widget-headher 模版中的dot
+而且可以多层传递
+
+```
+{{define "widget"}}
+<div class="widget">
+{{template "widget-header" .Name}}
+<span class="price">${{.Price}}</span>
+</div>
+{{end}}
+
+{{define "widget-header"}}
+<h3 class="name">{{.}}</h3>
+{{end}}
+
+{{range .Widgets}}
+  {{template "widget" .}}
+{{end}}
+
+output:
+Blue Widget
+$12
+Red Widget
+$12
+Green Widget
+$12
+
+```
 
 
 
