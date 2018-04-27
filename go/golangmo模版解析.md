@@ -121,3 +121,11 @@ output:
 
 golang 模版有两个常用的传入参数的类型。一个是struct，还有一个是map[string]interface{},这两个类型会等价为json object
 
+当嵌套时：比如结构体嵌套map,我们想直接取如上例子中的dog的Name,则在模版中这样取{{.Dog.Name}},便可以取到其值。而当Name 为非导出字段时，不能单独取
+同理适用于map类型：
+例：
+
+
+
+
+
