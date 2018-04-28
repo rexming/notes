@@ -324,7 +324,310 @@ Green Widget
 $12
 
 ```
-# 使用函数函数变量
+# 使用模版函数
+and / or
+都是接收两个参数，当第一个参数为true,or不执行第二个
+
+```
+package main
+
+import (
+  "html/template"
+  "net/http"
+)
+
+var testTemplate *template.Template
+
+type User struct {
+  Admin bool
+}
+
+type ViewData struct {
+  *User
+}
+
+func main() {
+  var err error
+  testTemplate, err = template.ParseFiles("hello.gohtml")
+  if err != nil {
+    panic(err)
+  }
+
+  http.HandleFunc("/", handler)
+  http.ListenAndServe(":3000", nil)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/html")
+
+  vd := ViewData{&User{true}}
+  err := testTemplate.Execute(w, vd)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+
+demo.html
+{{if and .User .User.Admin}}
+  You are an admin user!
+{{else}}
+  Access denied!
+{{end}}
+
+```
+比较函数还有下面这些
+*   `eq` - Returns the boolean truth of `arg1 == arg2`
+*   `ne` - Returns the boolean truth of `arg1 != arg2`
+*   `lt` - Returns the boolean truth of `arg1 < arg2`
+*   `le` - Returns the boolean truth of `arg1 <= arg2`
+*   `gt` - Returns the boolean truth of `arg1 > arg2`
+*   `ge` - Returns the boolean truth of `arg1 >= arg2`
+ 
+## 使用函数变量
+当做一下对象属性判断时，我们通常事先填充好map或struct
+
+```
+type ViewData struct {
+  Permissions map[string]bool
+}
+
+// or
+
+type ViewData struct {
+  Permissions struct {
+    FeatureA bool
+    FeatureB bool
+  }
+}
+```
+但是这样很不方便，所以出现了下面3种解决方案
+
+1.给对象增加方法
+
+```
+main.go
+
+package main
+
+import (
+  "html/template"
+  "net/http"
+)
+
+var testTemplate *template.Template
+
+type ViewData struct {
+  User User
+}
+
+type User struct {
+  ID    int
+  Email string
+}
+
+func (u User) HasPermission(feature string) bool {
+  if feature == "feature-a" {
+    return true
+  } else {
+    return false
+  }
+}
+
+func main() {
+  var err error
+  testTemplate, err = template.ParseFiles("hello.gohtml")
+  if err != nil {
+    panic(err)
+  }
+
+  http.HandleFunc("/", handler)
+  http.ListenAndServe(":3000", nil)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/html")
+
+  vd := ViewData{
+    User: User{1, "jon@calhoun.io"},
+  }
+  err := testTemplate.Execute(w, vd)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+
+demo.html
+
+{{if .User.HasPermission "feature-a"}}
+  <div class="feature">
+    <h3>Feature A</h3>
+    <p>Some other stuff here...</p>
+  </div>
+{{else}}
+  <div class="feature disabled">
+    <h3>Feature A</h3>
+    <p>To enable Feature A please upgrade your plan</p>
+  </div>
+{{end}}
+
+{{if .User.HasPermission "feature-b"}}
+  <div class="feature">
+    <h3>Feature B</h3>
+    <p>Some other stuff here...</p>
+  </div>
+{{else}}
+  <div class="feature disabled">
+    <h3>Feature B</h3>
+    <p>To enable Feature B please upgrade your plan</p>
+  </div>
+{{end}}
+
+<style>
+  .feature {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin: 5px;
+    width: 45%;
+    display: inline-block;
+  }
+  .disabled {
+    color: #ccc;
+  }
+</style>
+
+```
+2.将对象方法变成对象的属性,使用call 来调用
+
+```
+package main
+
+import (
+  "html/template"
+  "net/http"
+)
+
+var testTemplate *template.Template
+
+type ViewData struct {
+  User User
+}
+
+type User struct {
+  ID            int
+  Email         string
+  HasPermission func(string) bool
+}
+
+func main() {
+  var err error
+  testTemplate, err = template.ParseFiles("hello.gohtml")
+  if err != nil {
+    panic(err)
+  }
+
+  http.HandleFunc("/", handler)
+  http.ListenAndServe(":3000", nil)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/html")
+
+  vd := ViewData{
+    User: User{
+      ID:    1,
+      Email: "jon@calhoun.io",
+      HasPermission: func(feature string) bool {
+        if feature == "feature-b" {
+          return true
+        }
+        return false
+      },
+    },
+  }
+  err := testTemplate.Execute(w, vd)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+
+demo.html
+{{if (call .User.HasPermission "feature-a")}}
+
+...
+
+{{if (call .User.HasPermission "feature-b")}}
+
+...
+
+
+```
+3.使用`template.FuncMap`，这个是功能最强大的
+The first thing to note is that this type appears to just be a `map[string]interface{}`, but there is a note below that every interface must be a function with a single return value, or a function with two return values where the first is the data you need to access in the template, and the second is an error that will terminate template execution if it isn’t nil.
+
+
+```
+package main
+
+import (
+  "html/template"
+  "net/http"
+)
+
+var testTemplate *template.Template
+
+type ViewData struct {
+  User User
+}
+
+type User struct {
+  ID    int
+  Email string
+}
+
+func main() {
+  var err error
+  testTemplate, err = template.New("hello.gohtml").Funcs(template.FuncMap{
+    "hasPermission": func(user User, feature string) bool {
+      if user.ID == 1 && feature == "feature-a" {
+        return true
+      }
+      return false
+    },
+  }).ParseFiles("hello.gohtml")
+  if err != nil {
+    panic(err)
+  }
+
+  http.HandleFunc("/", handler)
+  http.ListenAndServe(":3000", nil)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/html")
+
+  user := User{
+    ID:    1,
+    Email: "jon@calhoun.io",
+  }
+  vd := ViewData{user}
+  err := testTemplate.Execute(w, vd)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+
+demo.html
+
+{{if hasPermission .User "feature-a"}}
+
+...
+
+{{if hasPermission .User "feature-b"}}
+
+...
+
+```
+
 
 
 
