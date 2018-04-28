@@ -308,7 +308,7 @@ footer称为子模版，index.html 称为父模版，子模版中可 获得父�
 {{end}}
 
 {{define "widget-header"}}
-<h3 class="name">{{.}}</h3>
+z<h3 class="name">{{.}}</h3>
 {{end}}
 
 {{range .Widgets}}
@@ -324,6 +324,7 @@ Green Widget
 $12
 
 ```
+# 使用函数函数变量
 
 
 
