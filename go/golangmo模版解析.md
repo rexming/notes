@@ -628,7 +628,30 @@ demo.html
 
 ```
 
+需要注意的地方是，map方法一定要在解析前定义
+使func可复用
 
+```
+func handler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/html")
 
+  user := User{
+    ID:    1,
+    Email: "jon@calhoun.io",
+  }
+  vd := ViewData{user}
+  err := testTemplate.Funcs(template.FuncMap{
+    "hasPermission": func(feature string) bool {
+      if user.ID == 1 && feature == "feature-a" {
+        return true
+      }
+      return false
+    },
+  }).Execute(w, vd)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+  }
+}
+```
 
 
