@@ -50,6 +50,7 @@
   * [线性表](suan-fa-he-shu-ju-jie-67845d/xian-xing-biao.md)
 * [数据库](shu-ju-ku.md)
   * [sqlite](shu-ju-ku/sqlite.md)
+  * [influxdb](shu-ju-ku/influxdb.md)
 * [实践](shi-jian.md)
   * [channel  等待结果](chan-deng-dai-jie-guo.md)
   * 多协程中易出现的错误
